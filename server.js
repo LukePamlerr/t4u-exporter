@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const RPC = require('discord-rpc');
 
-const clientId = 'YOUR_CLIENT_ID'; // Replace with your Discord Application Client ID
+const clientId = '1392373468904951938'; // Replace with your Discord Application Client ID
 const wss = new WebSocket.Server({ port: 8080 });
 const client = new RPC.Client({ transport: 'ipc' });
 
