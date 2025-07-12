@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Rich Presence Controller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 32rem;
+            width: 100%;
+            padding: 1.5rem;
+        }
+        .preview-box {
+            background-color: #2d3748;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .error {
+            color: #ef4444;
+            font-size: 0.875rem;
+        }
+        input, button {
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-2xl font-bold mb-6 text-center">Discord Rich Presence Controller</h1>
+        
+        <div class="preview-box">
+            <h2 class="text-lg font-semibold mb-2">Preview</h2>
+            <p id="preview-details" class="text-sm">Details: <span>Idle</span></p>
+            <p id="preview-state" class="text-sm">State: <span>Waiting</span></p>
+            <p id="preview-timer" class="text-sm">Timer: <span>Not set</span></p>
+            <p id="preview-buttons" class="text-sm">Buttons: <span>None</span></p>
+            <p id="preview-status" class="text-sm text-green-400">Status: Disconnected</p>
+        </div>
+
+        <form id="rpc-form" class="space-y-4">
+            <div>
+                <label for="details" class="block text-sm font-medium">Details</label>
+                <input type="text" id="details" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Playing a game">
+            </div>
+            <div>
+                <label for="state" class="block text-sm font-medium">State</label>
+                <input type="text" id="state" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., In Lobby">
+            </div>
+            <div>
+                <label for="large-image" class="block text-sm font-medium">Large Image Key</label>
+                <input type="text" id="large-image" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., large_icon">
+            </div>
+            <div>
+                <label for="small-image" class="block text-sm font-medium">Small Image Key</label>
+                <input type="text" id="small-image" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., small_icon">
+            </div>
+            <div>
+                <label for="button1-label" class="block text-sm font-medium">Button 1 Label</label>
+                <input type="text" id="button1-label" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Join Server">
+            </div>
+            <div>
+                <label for="button1-url" class="block text-sm font-medium">Button 1 URL</label>
+                <input type="url" id="button1-url" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., https://discord.gg/example">
+            </div>
+            <div>
+                <label for="timer" class="block text-sm font-medium">Timer (seconds from now)</label>
+                <input type="number" id="timer" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., 3600">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Update Presence</button>
+        </form>
+        <p id="error" class="error mt-4 hidden"></p>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8080');
+        const form = document.getElementById('rpc-form');
+        const error = document.getElementById('error');
+        const preview = {
+            details: document.getElementById('preview-details').querySelector('span'),
+            state: document.getElementById('preview-state').querySelector('span'),
+            timer: document.getElementById('preview-timer').querySelector('span'),
+            buttons: document.getElementById('preview-buttons').querySelector('span'),
+            status: document.getElementById('preview-status')
+        };
+
+        ws.onopen = () => {
+            preview.status.textContent = 'Connected to server';
+            preview.status.classList.replace('text-red-400', 'text-green-400');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'error') {
+                error.textContent = data.message;
+                error.classList.remove('hidden');
+            } else if (data.type === 'update') {
+                preview.details.textContent = data.details || 'Idle';
+                preview.state.textContent = data.state || 'Waiting';
+                preview.timer.textContent = data.timer ? `Ends in ${Math.round((data.timer - Date.now() / 1000))}s` : 'Not set';
+                preview.buttons.textContent = data.buttons.length ? data.buttons.map(b => b.label).join(', ') : 'None';
+                preview.status.textContent = 'Presence updated';
+                error.classList.add('hidden');
+            }
+        };
+
+        ws.onclose = () => {
+            preview.status.textContent = 'Disconnected from server';
+            preview.status.classList.replace('text-green-400', 'text-red-400');
+            error.textContent = 'Server disconnected. Please check the backend.';
+            error.classList.remove('hidden');
+        };
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const presence = {
+                details: document.getElementById('details').value,
+                state: document.getElementById('state').value,
+                largeImage: document.getElementById('large-image').value,
+                smallImage: document.getElementById('small-image').value,
+                button1: {
+                    label: document.getElementById('button1-label').value,
+                    url: document.getElementById('button1-url').value
+                },
+                timer: parseInt(document.getElementById('timer').value) || 0
+            };
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(presence));
+            } else {
+                error.textContent = 'Not connected to server';
+                error.classList.remove('hidden');
+            }
+        });
+
+        // Update timer preview every second
+        setInterval(() => {
+            if (preview.timer.textContent !== 'Not set') {
+                const seconds = parseInt(preview.timer.textContent.match(/\d+/));
+                if (seconds > 0) {
+                    preview.timer.textContent = `Ends in ${seconds - 1}s`;
+                } else {
+                    preview.timer.textContent = 'Expired';
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
