@@ -17,7 +17,7 @@
             justify-content: center;
         }
         .container {
-            max-width: 32rem;
+            max-width: 36rem;
             width: 100%;
             padding: 1.5rem;
         }
@@ -45,37 +45,56 @@
         
         <div class="preview-box">
             <h2 class="text-lg font-semibold mb-2">Preview</h2>
-            <p id="preview-details" class="text-sm">Details: <span>Idle</span></p>
-            <p id="preview-state" class="text-sm">State: <span>Waiting</span></p>
+            <p id="preview-details" class="text-sm">Details: <span>meana.xyz</span></p>
+            <p id="preview-state" class="text-sm">State: <span>Playing</span></p>
             <p id="preview-timer" class="text-sm">Timer: <span>Not set</span></p>
-            <p id="preview-buttons" class="text-sm">Buttons: <span>None</span></p>
-            <p id="preview-status" class="text-sm text-green-400">Status: Disconnected</p>
+            <p id="preview-large-image" class="text-sm">Large Image: <span>img_3056 (Numbani)</span></p>
+            <p id="preview-small-image" class="text-sm">Small Image: <span>img_3056 (Rogue - Level 100)</span></p>
+            <p id="preview-party" class="text-sm">Party: <span>1/5 (ID: ae488379-351d-4a4f-ad32-2b9b01c91657)</span></p>
+            <p id="preview-join" class="text-sm">Join Secret: <span>MTI4NzM0OjFpMmhuZToxMjMxMjM=</span></p>
+            <p id="preview-status" class="text-sm text-red-400">Status: Disconnected</p>
         </div>
 
         <form id="rpc-form" class="space-y-4">
             <div>
                 <label for="details" class="block text-sm font-medium">Details</label>
-                <input type="text" id="details" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Playing a game">
+                <input type="text" id="details" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="meana.xyz">
             </div>
             <div>
                 <label for="state" class="block text-sm font-medium">State</label>
-                <input type="text" id="state" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., In Lobby">
+                <input type="text" id="state" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="Playing">
             </div>
             <div>
                 <label for="large-image" class="block text-sm font-medium">Large Image Key</label>
-                <input type="text" id="large-image" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., large_icon">
+                <input type="text" id="large-image" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="img_3056">
+            </div>
+            <div>
+                <label for="large-image-text" class="block text-sm font-medium">Large Image Text</label>
+                <input type="text" id="large-image-text" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="Numbani">
             </div>
             <div>
                 <label for="small-image" class="block text-sm font-medium">Small Image Key</label>
-                <input type="text" id="small-image" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., small_icon">
+                <input type="text" id="small-image" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="img_3056">
             </div>
             <div>
-                <label for="button1-label" class="block text-sm font-medium">Button 1 Label</label>
-                <input type="text" id="button1-label" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Join Server">
+                <label for="small-image-text" class="block text-sm font-medium">Small Image Text</label>
+                <input type="text" id="small-image-text" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="Rogue - Level 100">
             </div>
             <div>
-                <label for="button1-url" class="block text-sm font-medium">Button 1 URL</label>
-                <input type="url" id="button1-url" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., https://discord.gg/example">
+                <label for="party-id" class="block text-sm font-medium">Party ID</label>
+                <input type="text" id="party-id" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="ae488379-351d-4a4f-ad32-2b9b01c91657">
+            </div>
+            <div>
+                <label for="party-size" class="block text-sm font-medium">Party Size</label>
+                <input type="number" id="party-size" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="1" min="1">
+            </div>
+            <div>
+                <label for="party-max" class="block text-sm font-medium">Party Max</label>
+                <input type="number" id="party-max" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="5" min="1">
+            </div>
+            <div>
+                <label for="join-secret" class="block text-sm font-medium">Join Secret</label>
+                <input type="text" id="join-secret" class="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" value="MTI4NzM0OjFpMmhuZToxMjMxMjM=">
             </div>
             <div>
                 <label for="timer" class="block text-sm font-medium">Timer (seconds from now)</label>
@@ -94,7 +113,10 @@
             details: document.getElementById('preview-details').querySelector('span'),
             state: document.getElementById('preview-state').querySelector('span'),
             timer: document.getElementById('preview-timer').querySelector('span'),
-            buttons: document.getElementById('preview-buttons').querySelector('span'),
+            largeImage: document.getElementById('preview-large-image').querySelector('span'),
+            smallImage: document.getElementById('preview-small-image').querySelector('span'),
+            party: document.getElementById('preview-party').querySelector('span'),
+            join: document.getElementById('preview-join').querySelector('span'),
             status: document.getElementById('preview-status')
         };
 
@@ -109,10 +131,13 @@
                 error.textContent = data.message;
                 error.classList.remove('hidden');
             } else if (data.type === 'update') {
-                preview.details.textContent = data.details || 'Idle';
-                preview.state.textContent = data.state || 'Waiting';
+                preview.details.textContent = data.details || 'None';
+                preview.state.textContent = data.state || 'None';
                 preview.timer.textContent = data.timer ? `Ends in ${Math.round((data.timer - Date.now() / 1000))}s` : 'Not set';
-                preview.buttons.textContent = data.buttons.length ? data.buttons.map(b => b.label).join(', ') : 'None';
+                preview.largeImage.textContent = data.largeImage ? `${data.largeImage} (${data.largeImageText || 'No text'})` : 'None';
+                preview.smallImage.textContent = data.smallImage ? `${data.smallImage} (${data.smallImageText || 'No text'})` : 'None';
+                preview.party.textContent = data.partyId ? `${data.partySize}/${data.partyMax} (ID: ${data.partyId})` : 'None';
+                preview.join.textContent = data.joinSecret || 'None';
                 preview.status.textContent = 'Presence updated';
                 error.classList.add('hidden');
             }
@@ -131,11 +156,13 @@
                 details: document.getElementById('details').value,
                 state: document.getElementById('state').value,
                 largeImage: document.getElementById('large-image').value,
+                largeImageText: document.getElementById('large-image-text').value,
                 smallImage: document.getElementById('small-image').value,
-                button1: {
-                    label: document.getElementById('button1-label').value,
-                    url: document.getElementById('button1-url').value
-                },
+                smallImageText: document.getElementById('small-image-text').value,
+                partyId: document.getElementById('party-id').value,
+                partySize: parseInt(document.getElementById('party-size').value) || 0,
+                partyMax: parseInt(document.getElementById('party-max').value) || 0,
+                joinSecret: document.getElementById('join-secret').value,
                 timer: parseInt(document.getElementById('timer').value) || 0
             };
             if (ws.readyState === WebSocket.OPEN) {
@@ -149,7 +176,7 @@
         // Update timer preview every second
         setInterval(() => {
             if (preview.timer.textContent !== 'Not set') {
-                const seconds = parseInt(preview.timer.textContent.match(/\d+/));
+                const seconds = parseInt(preview.timer.textContent.match(/\d+/)?.[0] || 0);
                 if (seconds > 0) {
                     preview.timer.textContent = `Ends in ${seconds - 1}s`;
                 } else {
