@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const RPC = require('discord-rpc');
 
-const clientId = '1392373468904951938'; // Replace with your Discord Application Client ID
+const clientId = 'YOUR_CLIENT_ID'; // Replace with your Discord Application Client ID
 const wss = new WebSocket.Server({ port: 8080 });
 const client = new RPC.Client({ transport: 'ipc' });
 
@@ -28,17 +28,21 @@ wss.on('connection', (ws) => {
                 details: data.details || undefined,
                 state: data.state || undefined,
                 assets: {},
-                buttons: [],
-                timestamps: {}
+                party: {},
+                secrets: {}
             };
 
             if (data.largeImage) activity.assets.large_image = data.largeImage;
+            if (data.largeImageText) activity.assets.large_text = data.largeImageText;
             if (data.smallImage) activity.assets.small_image = data.smallImage;
-            if (data.button1.label && data.button1.url) {
-                activity.buttons.push({ label: data.button1.label, url: data.button1.url });
+            if (data.smallImageText) activity.assets.small_text = data.smallImageText;
+            if (data.partyId) activity.party.id = data.partyId;
+            if (data.partySize && data.partyMax) {
+                activity.party.size = [data.partySize, data.partyMax];
             }
+            if (data.joinSecret) activity.secrets.join = data.joinSecret;
             if (data.timer) {
-                activity.timestamps.end = Math.floor(Date.now() / 1000) + data.timer;
+                activity.timestamps = { end: Math.floor(Date.now() / 1000) + data.timer };
             }
 
             client.setActivity(activity).then(() => {
